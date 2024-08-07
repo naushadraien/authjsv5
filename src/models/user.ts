@@ -1,6 +1,7 @@
-import mongoose from "mongoose";
+import { UserModalType } from "@/types/auth";
+import mongoose, { Document } from "mongoose";
 
-const userSchema = new mongoose.Schema(
+const userSchema: mongoose.Schema = new mongoose.Schema(
   {
     firstName: {
       type: String,
@@ -17,10 +18,10 @@ const userSchema = new mongoose.Schema(
     password: {
       type: String,
       minLength: 8,
-      maxLength: 20,
       select: false,
     },
     role: {
+      type: String,
       enum: ["admin", "user"],
       default: "user",
     },
@@ -35,4 +36,5 @@ const userSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-export const User = mongoose.models?.User || mongoose.model("User", userSchema);
+export const User: mongoose.Model<UserModalType> =
+  mongoose.models?.User || mongoose.model<UserModalType>("User", userSchema);
