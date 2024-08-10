@@ -1,9 +1,11 @@
 "use server";
+import { signIn } from "@/auth";
 import { config } from "@/config/config";
 import { connectDB } from "@/lib/connectDB";
 import { User } from "@/models/user";
 import { loginSchema, registerSchema } from "@/validationSchema/auth";
 import bcrypt from "bcryptjs";
+import { CredentialsSignin } from "next-auth";
 import { redirect } from "next/navigation";
 
 async function createUser(formData: FormData) {
@@ -82,4 +84,22 @@ async function loginUser(formData: FormData) {
   redirect("/");
 }
 
-export { createUser, loginUser };
+async function login(formData: FormData) {
+  const email = formData.get("email") as string;
+  const password = formData.get("password") as string;
+
+  try {
+    await signIn("credentials", {
+      redirect: false,
+      callbackUrl: "/",
+      email,
+      password,
+    });
+  } catch (error) {
+    const someError = error as CredentialsSignin;
+    return someError.cause;
+  }
+  redirect("/");
+}
+
+export { createUser, loginUser, login };

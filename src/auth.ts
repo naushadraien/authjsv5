@@ -4,9 +4,19 @@ import bcrypt from "bcryptjs";
 import { User } from "./models/user";
 import { connectDB } from "./lib/connectDB";
 import { config } from "./config/config";
+import GitHub from "next-auth/providers/github";
+import Google from "next-auth/providers/google";
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
   providers: [
+    GitHub({
+      clientId: config.GithubAuthID,
+      clientSecret: config.GithubAuthSecret,
+    }),
+    Google({
+      clientId: config.GoogleAuthID,
+      clientSecret: config.GoogleAuthSecret,
+    }),
     Credentials({
       name: "credentials",
       // You can specify which fields should be submitted, by adding keys to the `credentials` object.
@@ -55,4 +65,22 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       },
     }),
   ],
+  pages: {
+    signIn: "/login",
+  },
+  callbacks: {
+    async session({ session, token }) {
+      if (token?.sub && token?.role) {
+        session.user.id = token.sub;
+        session.user.role = token.role;
+      }
+      return session;
+    },
+    async jwt({ token, user }) {
+      if (user) {
+        token.role = user.role;
+      }
+      return token;
+    },
+  },
 });

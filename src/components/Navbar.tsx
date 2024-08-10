@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { Button } from "./ui/button";
+import { signOut } from "@/auth";
 
 const Navbar = async () => {
   return (
@@ -28,7 +29,12 @@ const Navbar = async () => {
             </Link>
           </li>
 
-          <form>
+          <form
+            action={async (formData) => {
+              "use server";
+              await signOut();
+            }}
+          >
             <Button type="submit" variant={"ghost"}>
               Logout
             </Button>
