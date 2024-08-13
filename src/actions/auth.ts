@@ -102,4 +102,10 @@ async function login(formData: FormData) {
   redirect("/");
 }
 
-export { createUser, loginUser, login };
+const getAllUsers = async () => {
+  connectDB(config.MONGOURI!);
+  const users = await User.find({});
+  return users;
+};
+
+export { createUser, loginUser, login, getAllUsers };

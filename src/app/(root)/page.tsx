@@ -1,4 +1,6 @@
 import { User } from "@/models/user";
+import { getSession } from "@/utils/getSession";
+import { redirect } from "next/navigation";
 
 const getUsers = async () => {
   try {
@@ -10,6 +12,10 @@ const getUsers = async () => {
 };
 
 const Home = async () => {
+  const session = await getSession();
+  if (!session?.user) {
+    redirect("/login");
+  }
   const data = await getUsers();
 
   return (

@@ -82,5 +82,33 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       }
       return token;
     },
+    signIn: async ({ user, account }) => {
+      if (account?.provider === "google") {
+        try {
+          const { email, image, name, id } = user;
+          connectDB(config.MONGOURI!);
+          const existingUser = await User.findOne({ email });
+          if (!existingUser) {
+            await User.create({
+              email,
+              image,
+              firstName: name,
+              lastName: name,
+              authProviderId: id,
+            });
+          } else {
+            return true;
+          }
+        } catch (error) {
+          throw new Error("Error while creating user");
+        }
+      }
+
+      if (account?.provider === "credentials") {
+        return true;
+      } else {
+        return false;
+      }
+    },
   },
 });
