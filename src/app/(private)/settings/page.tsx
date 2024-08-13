@@ -1,8 +1,16 @@
 import { getAllUsers } from "@/actions/auth";
 import { Button } from "@/components/ui/button";
 import { User } from "@/models/user";
+import { getSession } from "@/utils/getSession";
+import { revalidatePath } from "next/cache";
+import { redirect } from "next/navigation";
 
 const Settings = async () => {
+  const session = await getSession();
+
+  if (session?.user?.role !== "admin") {
+    redirect("/dashboard");
+  }
   const users = await getAllUsers();
 
   return (
@@ -27,6 +35,7 @@ const Settings = async () => {
                   action={async () => {
                     "use server";
                     await User.findByIdAndDelete(user._id);
+                    revalidatePath("/settings");
                   }}
                 >
                   <Button variant="destructive" type="submit">
