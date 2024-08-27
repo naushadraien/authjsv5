@@ -1,10 +1,32 @@
 "use client";
 import React, { useState } from "react";
-import Image from "next/image";
+import Image, { StaticImageData } from "next/image";
 import Modal from "@/components/Modal";
 import ChatZoneImg from "@/assets/ChatZone.png";
+import BroadBandImg from "@/assets/Digiweb_Broadband_Logo.png";
+import ZurichImg from "@/assets/Zurich.png";
+import AIBImg from "@/assets/AIB_Logo.png";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+
+const imgsData: Array<{ src: string | StaticImageData; alt: string }> = [
+  {
+    src: ChatZoneImg,
+    alt: "Chat Image",
+  },
+  {
+    src: BroadBandImg,
+    alt: "BroadBand Image",
+  },
+  {
+    src: ZurichImg,
+    alt: "BroadBand Image",
+  },
+  {
+    src: AIBImg,
+    alt: "BroadBand Image",
+  },
+];
 
 const Page = () => {
   const [openModal, setOpenModal] = useState(false);
@@ -63,8 +85,76 @@ const Page = () => {
     ]);
   };
 
+  const [imgData, setImgData] = useState(imgsData);
+  const [draggedIndex, setDraggedIndex] = useState<number | null>(null);
+
+  const handleDragStart = (index: number) => {
+    setDraggedIndex(index);
+  };
+
+  const handleDragOver = (
+    event: React.DragEvent<HTMLDivElement>,
+    index: number
+  ) => {
+    event.preventDefault();
+
+    if (draggedIndex !== null && draggedIndex !== index) {
+      const newImgData = [...imgData];
+      const [draggedImage] = newImgData.splice(draggedIndex, 1);
+      newImgData.splice(index, 0, draggedImage);
+      setImgData(newImgData);
+      setDraggedIndex(index);
+    }
+  };
+
+  // const handleDragOver = (e: React.DragEvent<HTMLDivElement>) => {
+  //   e.preventDefault();
+  // };
+
+  const handleDrop = (index: number) => {
+    // if (draggedIndex === null) return;
+
+    // const newImgData = [...imgData];
+    // const [draggedImage] = newImgData.splice(draggedIndex, 1);
+    // newImgData.splice(index, 0, draggedImage);
+
+    // setImgData(newImgData);
+    setDraggedIndex(null);
+  };
+
   return (
     <>
+      <div className="flex justify-center items-center mb-20">
+        <div className="flex gap-6 justify-center items-center mt-5">
+          {imgData.map((img, idx) => (
+            <div
+              key={idx}
+              draggable
+              onDragStart={() => handleDragStart(idx)}
+              onDragOver={(event) => handleDragOver(event, idx)}
+              onDrop={() => handleDrop(idx)}
+              style={{
+                cursor: "move",
+                opacity: draggedIndex === idx ? 0.5 : 1,
+                transform: draggedIndex === idx ? "scale(1.05)" : "scale(1)",
+                transition: "transform 0.2s, opacity 0.2s",
+              }}
+            >
+              <Image src={img.src} alt={img.alt} width={100} height={100} />
+            </div>
+            // <div
+            //   key={idx}
+            //   draggable
+            //   onDragStart={() => handleDragStart(idx)}
+            //   onDragOver={handleDragOver}
+            //   onDrop={() => handleDrop(idx)}
+            //   style={{ cursor: "move" }}
+            // >
+            //   <Image src={img.src} alt={img.alt} width={100} height={100} />
+            // </div>
+          ))}
+        </div>
+      </div>
       <div
         onClick={handleOpenModal}
         className="flex justify-center items-center mt-20 flex-col"
