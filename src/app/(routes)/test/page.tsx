@@ -13,8 +13,6 @@ const Page = () => {
   >([]);
   const [editingIndex, setEditingIndex] = useState<number | null>(null);
 
-  const [text, setText] = useState("");
-
   const handleOpenModal = () => setOpenModal(true);
   const handleCloseModal = () => setOpenModal(false);
 
@@ -54,6 +52,15 @@ const Page = () => {
   const deleteThisPositionText = (idx: number) => {
     setPositions((prev) => [...prev.filter((_, i) => i !== idx)]);
     setEditingIndex(null);
+  };
+
+  const handleOuterText = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const newOuterText = e.target.value;
+    setPositions((prev) => [
+      ...prev.map((pos, i) =>
+        i === editingIndex ? { ...pos, text: newOuterText } : pos
+      ),
+    ]);
   };
 
   return (
@@ -110,7 +117,7 @@ const Page = () => {
                   // pointerEvents: "none", // Prevent the text from being interactive
                 }}
               >
-                {editingIndex === index ? (
+                {/* {editingIndex === index ? (
                   <>
                     <Input
                       value={pos.text}
@@ -125,12 +132,19 @@ const Page = () => {
                   </>
                 ) : (
                   <p onClick={() => setEditingIndex(index)}>{pos.text}</p>
-                )}
+                )} */}
+                <p onClick={() => setEditingIndex(index)}>{pos.text}</p>
               </div>
             ))}
-            <Button variant={"destructive"} onClick={deleteAllPositions}>
-              Delete All Positions
-            </Button>
+            <form onSubmit={(e) => e.preventDefault()}>
+              <Input onChange={handleOuterText} />
+              <Button type="submit">Submit</Button>
+            </form>
+            {positions.length > 0 && (
+              <Button variant={"destructive"} onClick={deleteAllPositions}>
+                Delete All Positions
+              </Button>
+            )}
           </div>
         </Modal>
       )}
