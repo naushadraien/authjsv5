@@ -19,7 +19,7 @@ const Home = async () => {
   }
   const data = await getUsers();
 
-  const tableData:TableData={
+  const tableData:TableData = {
     headers:[
       {key: 'name', label: 'Name'},
       {key: 'rollNo', label: 'Roll No'},

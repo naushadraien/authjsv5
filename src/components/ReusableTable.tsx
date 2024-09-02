@@ -10,7 +10,7 @@ type TableBody = {
   [key: string]: React.ReactNode | string;
 };
 
-type TableData = {
+export type TableData = {
   headers: TableHeader[];
   body: TableBody[];
 };
@@ -71,7 +71,7 @@ const ReusableTable: React.FC<ReusableTableProps> = ({ tableData }) => {
 
   return (
     <div className="overflow-x-auto">
-      <table className="min-w-full bg-white border border-gray-200">
+      <table className="min-w-full bg-white border border-gray-200 rounded-lg overflow-hidden">
         <thead>
           <tr>
             <th className="px-4 py-2 border-b border-r border-gray-200 bg-gray-100 text-left text-sm font-medium text-gray-600">
@@ -96,7 +96,8 @@ const ReusableTable: React.FC<ReusableTableProps> = ({ tableData }) => {
         </thead>
         <tbody>
           {sortedData.map((row, rowIndex) => (
-            <tr key={rowIndex} className="hover:bg-gray-50">
+                       <tr key={rowIndex} className={`hover:bg-gray-50 even:bg-gray-100`}>
+            {/* <tr key={rowIndex} className={`hover:bg-gray-50 ${rowIndex %2 === 0 ? 'bg-gray-100' : ''}`}> */}
               <td className="px-4 py-2 border-b border-r border-gray-200 text-sm text-gray-700">
                 <input
                   type="checkbox"
