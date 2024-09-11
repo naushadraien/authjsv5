@@ -9,7 +9,7 @@ import AIBImg from "@/assets/AIB_Logo.png";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 
-const imgsData: Array<{ src: string | StaticImageData; alt: string }> = [
+export const imgsData: Array<{ src: string | StaticImageData; alt: string }> = [
   {
     src: ChatZoneImg,
     alt: "Chat Image",
