@@ -1,19 +1,15 @@
 "use client";
-import {
-  GoogleMap,
-  InfoWindow,
-  OverlayView,
-  useJsApiLoader,
-} from "@react-google-maps/api";
+import { GoogleMap, OverlayView, useJsApiLoader } from "@react-google-maps/api";
 import { useState, useRef, useEffect, memo, useCallback } from "react";
 import "./style.css";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Triangle, X } from "lucide-react";
+import { X } from "lucide-react";
 
 const mapContainerStyle = {
   width: "100%",
   height: "100vh",
 };
+
 export interface Property {
   id: number;
   position: {
@@ -99,32 +95,24 @@ const PropertyMap = () => {
     }
   }, [isLoaded, map]);
 
-  //this use effect code and imported only work if removed the commented code for InforWindow component below
   useEffect(() => {
-    // Create a MutationObserver to monitor changes in the DOM
     const observer = new MutationObserver((mutations) => {
       mutations.forEach((mutation) => {
-        // Check if the mutation type is 'childList'
         if (mutation.type === "childList") {
-          // Get elements with the class names 'gm-style-iw gm-style-iw-c'
           const targetElement = document.getElementsByClassName(
             "gm-style-iw gm-style-iw-c"
           );
 
           if (targetElement.length > 0) {
-            // Convert the HTMLCollection to an array for iteration
             const iteratedElement = Array.from(targetElement);
 
             iteratedElement.forEach((el) => {
-              // Check if the parent node does not already have the 'custom-parent' class
               if (
                 !(el.parentNode as Element)?.classList.contains("custom-parent")
               ) {
-                // Create a new div with the 'custom-parent' class
                 const wrapper = document.createElement("div");
                 wrapper.appendChild(el.cloneNode(true));
                 wrapper.className = "custom-parent";
-                // Replace the original element with the new wrapped element
                 el?.parentNode?.replaceChild(wrapper, el);
               }
             });
@@ -133,13 +121,11 @@ const PropertyMap = () => {
       });
     });
 
-    // Start observing the document body for changes in the child elements
     observer.observe(document.body, {
       childList: true,
       subtree: true,
     });
 
-    // Disconnect the observer when the component is unmounted to avoid memory leaks
     return () => {
       observer.disconnect();
     };
@@ -170,8 +156,29 @@ const PropertyMap = () => {
   const handleCloseButton = useCallback(() => {
     setSelectedProperty(null);
   }, []);
+
+  const handleZoomIn = useCallback(() => {
+    if (map) {
+      map.setZoom(map.getZoom()! + 1);
+    }
+  }, [map]);
+
+  const handleZoomOut = useCallback(() => {
+    if (map) {
+      map.setZoom(map.getZoom()! - 1);
+    }
+  }, [map]);
+
+    const handleFullScreen = useCallback(() => {
+      if (!document.fullscreenElement) {
+        document.documentElement.requestFullscreen();
+      } else if (document.exitFullscreen) {
+        document.exitFullscreen();
+      }
+    }, []);
+
   return (
-    <div className="w-full">
+    <div className="w-full relative">
       {isLoaded ? (
         <div>
           <input
@@ -185,6 +192,10 @@ const PropertyMap = () => {
             center={center}
             zoom={10}
             onLoad={(map) => setMap(map)}
+            options={{
+              zoomControl: false,
+              fullscreenControl: false,
+            }}
           >
             {propertiesData.map((property) => (
               <OverlayView
@@ -226,48 +237,22 @@ const PropertyMap = () => {
                         ${selectedProperty.price.toLocaleString()}
                       </div>
                     </CardContent>
-                    {/* <div className="triangle-clip" /> */}
-                    {/* <Triangle
-                      className="absolute left-[0] -bottom-[1.2rem] fill-white stroke-white z-50 rotate-180"
-                      strokeWidth={0.5}
-                    /> */}
                   </Card>
                 </div>
               </OverlayView>
             )}
-
-            {/* {selectedProperty && (
-              <InfoWindow
-                position={selectedProperty.position}
-                onCloseClick={() => setSelectedProperty(null)}
-              >
-                <div>
-                  <Card className="min-w-64 shadow-lg">
-                    <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                      <CardTitle className="text-sm font-medium">
-                        Property Details
-                      </CardTitle>
-                      <button
-                        onClick={() => setSelectedProperty(null)}
-                        className="absolute right-0 -top-40 z-50 "
-                      >
-                        <X />
-                      </button>
-                    </CardHeader>
-                    <CardContent>
-                      <div className="text-lg font-bold">
-                        ${selectedProperty.price.toLocaleString()}
-                      </div>
-                    </CardContent>
-                    <Triangle
-                      className="absolute right-[45%] -bottom-[1.2rem] fill-white stroke-white z-50 rotate-180"
-                      strokeWidth={0.5}
-                    />
-                  </Card>
-                </div>
-              </InfoWindow>
-            )} */}
           </GoogleMap>
+          <div className="zoom-controls">
+            <button onClick={handleZoomIn} className="zoom-button">
+              +
+            </button>
+            <button onClick={handleZoomOut} className="zoom-button">
+              -
+            </button>
+            <button onClick={handleFullScreen} className="zoom-button">
+              ⛶
+            </button>
+          </div>
         </div>
       ) : (
         <p className="text-center font-medium">Loading...</p>
