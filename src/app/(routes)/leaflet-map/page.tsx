@@ -4,6 +4,8 @@ import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
 import { LatLngExpression, LatLngBounds, divIcon } from "leaflet";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import "leaflet/dist/leaflet.css";
+import { Triangle, X } from "lucide-react";
+import "./style.css";
 
 interface Property {
   id: string;
@@ -68,18 +70,30 @@ const PropertyMap: React.FC<PropertyMapProps> = () => {
     },
   ];
 
-  const { center, zoom } = useMemo(() => {
+  const center: LatLngExpression = [33.93113, -117.54866];
+
+  const { zoom } = useMemo(() => {
     if (properties.length === 0) {
-      return { center: [0, 0] as LatLngExpression, zoom: 2 };
+      return { zoom: 2 };
     }
 
-    const bounds = new LatLngBounds(properties.map((p) => [p.lat, p.lng]));
-
     return {
-      center: bounds.getCenter(),
       zoom: 10,
     };
   }, []);
+
+  // const { center, zoom } = useMemo(() => {
+  //   if (properties.length === 0) {
+  //     return { center: [0, 0] as LatLngExpression, zoom: 2 };
+  //   }
+
+  //   const bounds = new LatLngBounds(properties.map((p) => [p.lat, p.lng]));
+
+  //   return {
+  //     center: bounds.getCenter(),
+  //     zoom: 10,
+  //   };
+  // }, []);
 
   const createCustomIcon = (price: number) => {
     return divIcon({
@@ -91,9 +105,12 @@ const PropertyMap: React.FC<PropertyMapProps> = () => {
   };
 
   const CustomPopup: React.FC<{ property: Property }> = ({ property }) => (
-    <Card className="min-w-64 shadow-lg">
+    <Card className="min-w-64 shadow-lg relative">
       <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
         <CardTitle className="text-sm font-medium">Property Details</CardTitle>
+        <button onClick={() => setSelectedProperty(null)}>
+          <X />
+        </button>
       </CardHeader>
       <CardContent>
         <div className="text-lg font-bold">
@@ -115,6 +132,10 @@ const PropertyMap: React.FC<PropertyMapProps> = () => {
           </div>
         </div>
       </CardContent>
+      <Triangle
+        className="absolute right-[45%] -bottom-[1.2rem] fill-white stroke-white z-50 rotate-180"
+        strokeWidth={0.5}
+      />
     </Card>
   );
 
@@ -134,7 +155,7 @@ const PropertyMap: React.FC<PropertyMapProps> = () => {
               click: () => setSelectedProperty(property),
             }}
           >
-            <Popup offset={[0, -10]} className="min-w-64">
+            <Popup offset={[0, -10]} className="min-w-64" closeButton={false}>
               <CustomPopup property={property} />
             </Popup>
           </Marker>
