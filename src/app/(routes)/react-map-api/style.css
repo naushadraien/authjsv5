@@ -44,3 +44,14 @@
   filter: none;
   /* transform: none; */
 }
+
+.triangle-clip {
+  position: absolute;
+  left: 0;
+  top: -80px;
+  z-index: 50000;
+  width: 100px; /* Adjust the width as needed */
+  height: 100px; /* Adjust the height as needed */
+  background-color: #fff; /* Adjust the color as needed */
+  clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
+}

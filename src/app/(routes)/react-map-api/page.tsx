@@ -209,7 +209,7 @@ const PropertyMap = () => {
                 mapPaneName={OverlayView.OVERLAY_MOUSE_TARGET}
               >
                 <div className="custom-overlay" ref={overlayRef}>
-                  <Card className="min-w-64 shadow-lg relative">
+                  <Card className="min-w-64 shadow-lg">
                     <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                       <CardTitle className="text-sm font-medium">
                         Property Details
@@ -226,8 +226,9 @@ const PropertyMap = () => {
                         ${selectedProperty.price.toLocaleString()}
                       </div>
                     </CardContent>
+                    {/* <div className="triangle-clip" /> */}
                     {/* <Triangle
-                      className="absolute right-[45%] -bottom-[1.2rem] fill-white stroke-white z-50 rotate-180"
+                      className="absolute left-[0] -bottom-[1.2rem] fill-white stroke-white z-50 rotate-180"
                       strokeWidth={0.5}
                     /> */}
                   </Card>
