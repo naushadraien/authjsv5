@@ -87,6 +87,9 @@ const ReusableTable: React.FC<ReusableTableProps> = ({ tableData }) => {
                 onChange={handleHeaderCheckboxChange}
               />
             </th>
+            <th className="px-4 py-2 border-b border-r border-gray-200 bg-gray-100 text-left text-sm font-medium text-gray-600">
+              <p>S.N.</p>
+            </th>
             {tableData.headers.map((header) => (
               <th
                 key={header.key}
@@ -113,6 +116,9 @@ const ReusableTable: React.FC<ReusableTableProps> = ({ tableData }) => {
                   checked={selectedRows.includes(rowIndex)}
                   onChange={() => handleRowCheckboxChange(rowIndex)}
                 />
+              </td>
+              <td className="px-4 py-2 border-b border-r border-gray-200 text-sm text-gray-700">
+                <p>{rowIndex + 1 + "."}</p>
               </td>
               {tableData.headers.map((header) => (
                 <td

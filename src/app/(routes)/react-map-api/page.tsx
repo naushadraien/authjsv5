@@ -169,13 +169,13 @@ const PropertyMap = () => {
     }
   }, [map]);
 
-    const handleFullScreen = useCallback(() => {
-      if (!document.fullscreenElement) {
-        document.documentElement.requestFullscreen();
-      } else if (document.exitFullscreen) {
-        document.exitFullscreen();
-      }
-    }, []);
+  const handleFullScreen = useCallback(() => {
+    if (!document.fullscreenElement) {
+      document.documentElement.requestFullscreen();
+    } else if (document.exitFullscreen) {
+      document.exitFullscreen();
+    }
+  }, []);
 
   return (
     <div className="w-full relative">
