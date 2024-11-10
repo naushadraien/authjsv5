@@ -17,9 +17,13 @@ export type TableData = {
 
 type ReusableTableProps = {
   tableData: TableData;
+  onClickTableRow?: (id: string) => void;
 };
 
-const ReusableTable: React.FC<ReusableTableProps> = ({ tableData }) => {
+const ReusableTable: React.FC<ReusableTableProps> = ({
+  tableData,
+  onClickTableRow,
+}) => {
   const [sortedData, setSortedData] = useState(tableData.body);
   const [sortConfig, setSortConfig] = useState<{
     key: string;
@@ -90,25 +94,35 @@ const ReusableTable: React.FC<ReusableTableProps> = ({ tableData }) => {
             <th className="px-4 py-2 border-b border-r border-gray-200 bg-gray-100 text-left text-sm font-medium text-gray-600">
               <p>S.N.</p>
             </th>
-            {tableData.headers.map((header) => (
-              <th
-                key={header.key}
-                className="px-4 py-2 border-b border-r border-gray-200 bg-gray-100 text-left text-sm font-medium text-gray-600"
-              >
-                {header.label}
-                <button
-                  onClick={() => handleSort(header.key)}
-                  className="ml-2 text-blue-500"
-                >
-                  sort
-                </button>
-              </th>
-            ))}
+            {tableData.headers.map(
+              (header) =>
+                header.key !== "id" && (
+                  <th
+                    key={header.key}
+                    className="px-4 py-2 border-b border-r border-gray-200 bg-gray-100 text-left text-sm font-medium text-gray-600"
+                  >
+                    {header.label}
+                    <button
+                      onClick={() => handleSort(header.key)}
+                      className="ml-2 text-blue-500"
+                    >
+                      sort
+                    </button>
+                  </th>
+                )
+            )}
           </tr>
         </thead>
         <tbody>
           {sortedData.map((row, rowIndex) => (
-            <tr key={rowIndex} className={`hover:bg-gray-50 even:bg-gray-100`}>
+            <tr
+              key={rowIndex}
+              className={`hover:bg-gray-50 even:bg-gray-100`}
+              role="button"
+              onClick={() => {
+                typeof row["id"] === "string" && onClickTableRow?.(row["id"]);
+              }}
+            >
               {/* <tr key={rowIndex} className={`hover:bg-gray-50 ${rowIndex %2 === 0 ? 'bg-gray-100' : ''}`}> */}
               <td className="px-4 py-2 border-b border-r border-gray-200 text-sm text-gray-700">
                 <input
@@ -120,14 +134,17 @@ const ReusableTable: React.FC<ReusableTableProps> = ({ tableData }) => {
               <td className="px-4 py-2 border-b border-r border-gray-200 text-sm text-gray-700">
                 <p>{rowIndex + 1 + "."}</p>
               </td>
-              {tableData.headers.map((header) => (
-                <td
-                  key={header.key}
-                  className="px-4 py-2 border-b border-r border-gray-200 text-sm text-gray-700"
-                >
-                  {row[header.key]}
-                </td>
-              ))}
+              {tableData.headers.map(
+                (header) =>
+                  header.key !== "id" && (
+                    <td
+                      key={header.key}
+                      className="px-4 py-2 border-b border-r border-gray-200 text-sm text-gray-700"
+                    >
+                      {row[header.key]}
+                    </td>
+                  )
+              )}
             </tr>
           ))}
         </tbody>
