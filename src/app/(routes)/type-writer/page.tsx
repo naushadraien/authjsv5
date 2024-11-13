@@ -7,7 +7,6 @@ const TypeWriterPage = () => {
       <Typewriter
         text={["Hello My Name is Rehan", "King is King"]}
         speed={100}
-        erase={false}
       />
     </main>
   );

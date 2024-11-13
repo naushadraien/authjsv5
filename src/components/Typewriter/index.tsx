@@ -1,5 +1,5 @@
 "use client";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import "./style.css";
 
 const DEFAULT_MS = 30;
@@ -43,32 +43,37 @@ export default function Typewriter({
 
   if (!Array.isArray(text)) text = [text];
 
+  const handleStart = useCallback(() => {
+    if (currentTextIndex === 0 && !isErasing) onStart();
+  }, [currentTextIndex, isErasing, onStart]);
+
+  const handleFinished = useCallback(() => {
+    if (loop) {
+      setTimeout(() => {
+        setCurrentTextIndex(0);
+        setCurrentStringIndex(0);
+      }, delay);
+    } else {
+      onFinished();
+    }
+  }, [loop, delay, onFinished]);
+
   useEffect(() => {
     const timeout = setTimeout(() => {
-      if (currentTextIndex === 0 && !isErasing) onStart();
+      handleStart();
+
       if (!isErasing) {
         if (currentTextIndex < text[currentStringIndex].length) {
           setCurrentTextIndex(currentTextIndex + 1);
+        } else if (erase) {
+          setIsErasing(true);
+        } else if (currentStringIndex < text.length - 1) {
+          setTimeout(() => {
+            setCurrentTextIndex(0);
+            setCurrentStringIndex(currentStringIndex + 1);
+          }, delay);
         } else {
-          if (erase) {
-            setIsErasing(true);
-          } else {
-            if (currentStringIndex < text.length - 1) {
-              setTimeout(() => {
-                setCurrentTextIndex(0);
-                setCurrentStringIndex(currentStringIndex + 1);
-              }, delay);
-            } else {
-              if (loop) {
-                setTimeout(() => {
-                  setCurrentTextIndex(0);
-                  setCurrentStringIndex(0);
-                }, delay);
-              } else {
-                onFinished();
-              }
-            }
-          }
+          handleFinished();
         }
       } else {
         if (currentTextIndex > 0) {
@@ -78,11 +83,7 @@ export default function Typewriter({
           if (currentStringIndex < text.length - 1) {
             setCurrentStringIndex(currentStringIndex + 1);
           } else {
-            if (loop) {
-              setCurrentStringIndex(0);
-            } else {
-              onFinished();
-            }
+            handleFinished();
           }
         }
       }
@@ -101,6 +102,8 @@ export default function Typewriter({
     onStart,
     isErasing,
     erase,
+    handleStart,
+    handleFinished,
   ]);
 
   return (
@@ -108,6 +111,7 @@ export default function Typewriter({
       <span
         aria-live="polite"
         aria-atomic="true"
+        role="status"
         className="typewriter-text"
         style={{ color: textColor, fontSize, fontFamily }}
       >
