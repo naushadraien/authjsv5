@@ -1,0 +1,28 @@
+/* Custom CSS for smooth animations and modern styles */
+.typewriter-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+.typewriter-text {
+  white-space: nowrap;
+  overflow: hidden;
+  border-right: 0.15em solid currentColor;
+}
+
+.typewriter-cursor {
+  display: inline-block;
+  vertical-align: text-bottom;
+  height: 1em; /* Match the height of the text */
+  width: 0.1em; /* Adjust the width to make it look balanced */
+  background-color: currentColor; /* Use the current text color */
+  animation: blink 1s step-end infinite;
+}
+
+@keyframes blink {
+  50% {
+    opacity: 0;
+  }
+}
