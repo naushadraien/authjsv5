@@ -13,15 +13,54 @@ export default function GridPage({
     sidebarDiv?.classList.toggle("show");
   };
 
+  const handleDropdownClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+    const button = event.currentTarget;
+    const dropdownMenu = button.nextElementSibling;
+    if (dropdownMenu) {
+      dropdownMenu.classList.toggle("show");
+    }
+  };
+
   return (
     <div className="grid">
       <nav>
+        {" "}
+        show
         <button onClick={handleBtnClick} className="bg-white text-black">
           Button
         </button>{" "}
         Navbar
       </nav>
-      <aside id="sidebar">Sidebar</aside>
+      <aside id="sidebar" className="px-4">
+        <div className="flex flex-col gap-4">
+          <div className="flex flex-col gap-2">
+            <button className="self-start" onClick={handleDropdownClick}>
+              Open TOdos
+            </button>
+            <ul className="side-menu">
+              <div>
+                <li>Test1</li>
+                <li>Test2</li>
+                <li>Test3</li>
+                <li>Test4</li>
+              </div>
+            </ul>
+          </div>
+          <div className="flex flex-col gap-2">
+            <button className="self-start" onClick={handleDropdownClick}>
+              Open Test Versions
+            </button>
+            <ul className="side-menu">
+              <div>
+                <li>This is not side menu</li>
+                <li>This is side menu</li>
+                <li>Test3</li>
+                <li>Test4</li>
+              </div>
+            </ul>
+          </div>
+        </div>
+      </aside>
       <main>
         <h1>
           Lorem ipsum dolor sit amet, consectetur adipisicing elit. Fuga dolorum
