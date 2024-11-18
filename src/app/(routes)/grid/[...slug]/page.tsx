@@ -1,6 +1,7 @@
 "use client";
-import { useEffect } from "react";
+import React, { useEffect } from "react";
 import "./style.css";
+import { buttonData } from "@/constants/data";
 export default function GridPage({
   params: { slug },
 }: {
@@ -34,8 +35,28 @@ export default function GridPage({
       <aside id="sidebar" className="px-4">
         <div className="flex flex-col gap-4">
           <div className="flex flex-col gap-2">
+            {buttonData.map((btn, idx) => {
+              return (
+                <React.Fragment key={idx}>
+                  <button
+                    className="self-start"
+                    key={idx}
+                    onClick={handleDropdownClick}
+                  >
+                    {btn.title}
+                  </button>
+                  <ul className="side-menu">
+                    <div>
+                      {btn.data.map((item, i) => (
+                        <li key={i}>{item}</li>
+                      ))}
+                    </div>
+                  </ul>
+                </React.Fragment>
+              );
+            })}
             <button className="self-start" onClick={handleDropdownClick}>
-              Open TOdos
+              Open Todos
             </button>
             <ul className="side-menu">
               <div>

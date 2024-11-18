@@ -34,3 +34,14 @@ export const tableData: TableData = {
     },
   ],
 };
+
+export const buttonData: Array<{ title: string; data: string[] }> = [
+  {
+    title: "Test Todos",
+    data: ["TOdos Test 1", "TOdos Test 2", "Test3", "Test4"],
+  },
+  {
+    title: "Open Test Versions",
+    data: ["This is not side menu", "This is side menu", "Test3", "Test4"],
+  },
+];
